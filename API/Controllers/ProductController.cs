@@ -7,11 +7,11 @@ namespace API.Controllers;
 
 [ApiController]
 [Route("api/products")]
-public class ProductsController : ControllerBase
+public class ProductController : ControllerBase
 {
-    private readonly ProductsService _productService;
+    private readonly ProductService _productService;
 
-    public ProductsController(ProductsService productsService)
+    public ProductController(ProductService productsService)
     {
         _productService = productsService;
     }
@@ -19,14 +19,14 @@ public class ProductsController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<List<Product>>> GetAll()
     {
-        var returnedProducts = await _productService.GetAllAsync();
+        var returnedProducts = await _productService.GetProductsAsync();
         return Ok(returnedProducts);
     }
 
     [HttpGet("{id}")]
     public async Task<ActionResult<Product>> GetById(Guid id)
     {
-        var returnedById = await _productService.GetByIdAsync(id);
+        var returnedById = await _productService.GetProductAsync(id);
         return Ok(returnedById);
     }
 }

@@ -5,11 +5,12 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
+
 builder.Services.AddControllers();
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
+
 builder.Services.AddOpenApi();
 
-// Setting Data Base
+// Data Base connection
 var connectionString = builder.Configuration.GetConnectionString("DbConnection");
 
 builder.Services.AddDbContext<ApiDbContext>(options =>
@@ -18,10 +19,8 @@ builder.Services.AddDbContext<ApiDbContext>(options =>
 });
 //
 
-// Setting Services
-builder.Services.AddScoped<ProductsService>();
-
-//
+builder.Services.AddScoped<UserService>();
+builder.Services.AddScoped<ProductService>();
 
 var app = builder.Build();
 

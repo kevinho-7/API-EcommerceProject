@@ -3,21 +3,21 @@ using Microsoft.EntityFrameworkCore;
 
 namespace API.Services;
 
-public class ProductsService
+public class ProductService
 {
     private readonly ApiDbContext _context;
 
-    public ProductsService(ApiDbContext context)
+    public ProductService(ApiDbContext context)
     {
         _context = context;
     }
 
-    public async Task<List<Product>> GetAllAsync()
+        public async Task<List<Product>> GetProductsAsync()
     {
         return await _context.products.ToListAsync();
     }
 
-    public async Task<Product?> GetByIdAsync(Guid id)
+    public async Task<Product?> GetProductAsync(Guid id)
     {
         return await _context.products
             .FirstOrDefaultAsync(p => p.id == id);
