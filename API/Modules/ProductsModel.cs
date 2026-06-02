@@ -1,10 +1,13 @@
 namespace API.Models;
 
-public class Products
+public class Product
 {
-    public string Name {get; set;} = string.Empty;
-    public string Description {get; set;} = string.Empty;
-    public double Price {get; set;}
-    public string Image_path {get; set;} = string.Empty;
-    public int Qantity {get; set;}
+    public Guid id {get; set;}
+    public string? name {get; set;}
+    public string? description {get; set;}
+    public decimal price {get; set;}
+    public string? image_path {get; set;}
+    public int quantity {get; set;}
+    public Guid category_id {get; set;}
+    public Guid company_id {get; set;}
 }
