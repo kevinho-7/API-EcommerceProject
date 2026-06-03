@@ -4,7 +4,10 @@ using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
+builder.Services.AddScoped<UserService>();
+builder.Services.AddScoped<CompanyService>();
+builder.Services.AddScoped<CategoryService>();
+builder.Services.AddScoped<ProductService>();
 
 builder.Services.AddControllers();
 
@@ -18,9 +21,6 @@ builder.Services.AddDbContext<ApiDbContext>(options =>
     options.UseNpgsql(connectionString);
 });
 //
-
-builder.Services.AddScoped<UserService>();
-builder.Services.AddScoped<ProductService>();
 
 var app = builder.Build();
 
