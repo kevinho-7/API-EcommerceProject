@@ -8,6 +8,11 @@ builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<CompanyService>();
 builder.Services.AddScoped<CategoryService>();
 builder.Services.AddScoped<ProductService>();
+//
+
+// Validators
+builder.Services.AddScoped<ProductValidator>();
+//
 
 builder.Services.AddControllers();
 
@@ -29,6 +34,9 @@ if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
 }
+
+// MiddleWares
+app.UseMiddleware<GlobalExceptionMiddleware>();
 
 app.UseHttpsRedirection();
 

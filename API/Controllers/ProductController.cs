@@ -20,75 +20,46 @@ public class ProductController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<List<Product>>> GetAll()
     {
-        try
-        {
-            var result = await _productService.GetProductsAsync();
-            return Ok(result);
-        }
-        catch
-        {
-            return StatusCode(500, "Internal Server Error");
-        }
+        var result = await _productService.GetProductsAsync();
+        return Ok(result);
     }
 
     // GET product by product_id
     [HttpGet("{product_id}")]
     public async Task<ActionResult<Product>> GetById(Guid product_id)
     {
-        try
-        {
-            var result = await _productService.GetProductAsync(product_id);
-            return Ok(result);
-        }
-        catch
-        {
-            return StatusCode(500, "Internal Server Error");
-        }
+        var result = await _productService.GetProductAsync(product_id);
+        
+        return Ok(result);
     }
 
     // GET products by company_id
     [HttpGet("company/{company_id}")]
     public async Task<ActionResult<List<Product>>> GetProductsByCompanyId(Guid company_id)
     {
-        try
-        {
-            var result = await _productService.GetProductsByCompanyIdAsync(company_id);
-            return Ok(result);
-        }
-        catch
-        {
-            return StatusCode(500, "Internal Server Error");
-        }
-    }
+        var result = await _productService.GetProductsByCompanyIdAsync(company_id);
+        return Ok(result);
+    }    
 
     // GET product by company_id
     [HttpGet("company/{company_id}/{product_id}")]
     public async Task<ActionResult<Product>> GetProductByCompanyId(Guid company_id, Guid product_id)
     {
-        try
-        {
-            var result = await _productService.GetProductByCompanyIdAsync(company_id, product_id);
-            return Ok(result);
-        }
-        catch
-        {
-            return StatusCode(500, "Internal Server Error");
-        }
+        var result = await _productService.GetProductByCompanyIdAsync(company_id, product_id);
+        return Ok(result);
     }
     
     // POST new product
-    [HttpPost("create")]
+    [HttpPost("add")]
     public async Task<ActionResult<Guid>> CreateProduct(Product product)
     {
-        try
+        
+        var newProductId =  await _productService.CreateProductAsync(product);
+        return Ok(new
         {
-            var newProductId =  await _productService.CreateProductAsync(product);
-            return StatusCode(201, newProductId);
-        }
-        catch
-        {
-            return StatusCode(500, "Internal Server Error");
-        }
+            message = $"Produto adicionado com sucesso",
+            product_id = newProductId
+        });
     }
 
 }
