@@ -4,7 +4,7 @@ using FluentValidation;
 
 public class ProductValidator : AbstractValidator<Product>
 {
-    private static readonly HashSet<string?> ValidExtensions = [".png", ".jpg", ".jpeg"];
+    private static readonly HashSet<string?> ValidExtensions = [".png", ".jpg", ".jpeg", ""];
 
     public ProductValidator()
     {

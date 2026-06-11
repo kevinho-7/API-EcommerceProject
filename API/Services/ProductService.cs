@@ -1,5 +1,7 @@
 using API.Models;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 
 namespace API.Services;
 
@@ -69,7 +71,7 @@ public class ProductService
     }
 
     // POST (add) product
-    public async Task<Guid> CreateProductAsync(Product product)
+    public async Task<Product> AddProductAsync(Product product)
     {
         var validation = _validator.Validate(product);
         if (!validation.IsValid)
@@ -77,13 +79,53 @@ public class ProductService
             throw new ValidationException(validation);
         }
 
-        product.id = Guid.NewGuid();
+        //product.id = Guid.NewGuid();
         await _context.products.AddAsync(product);
         await _context.SaveChangesAsync();
         
-        return product.id;
+        return product;
     } 
 
     // PUT (update) product
-    
+    public async Task<Product> UpdateProductAsync(Guid product_id, Product newProduct)
+    {
+        
+        var product = await _context.products.FindAsync(product_id);
+        var validation = _validator.Validate(newProduct);
+
+        if(product == null)
+        {
+            throw new NotFoundException("Produto não encontrado");
+        }
+        else if (!validation.IsValid)
+        {
+            throw new ValidationException(validation);
+        }
+
+        product.title = newProduct.title;
+        product.description = newProduct.description;
+        product.price = newProduct.price;
+        product.image_path = newProduct.image_path;
+        product.quantity = newProduct.quantity;
+
+        await _context.SaveChangesAsync();
+
+        return product;            
+    }
+
+    // DELETE product
+    public async Task<Guid> DeleteProductAsync(Guid product_id)
+    {
+        var product = await _context.products.FindAsync(product_id);
+
+        if(product == null)
+        {
+            throw new NotFoundException("Produto não encontrado");
+        }
+
+        _context.products.Remove(product);
+        await _context.SaveChangesAsync();
+        
+        return product_id;
+    }
 }

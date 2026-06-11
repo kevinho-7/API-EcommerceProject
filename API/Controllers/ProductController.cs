@@ -51,14 +51,38 @@ public class ProductController : ControllerBase
     
     // POST new product
     [HttpPost("add")]
-    public async Task<ActionResult<Guid>> CreateProduct(Product product)
+    public async Task<ActionResult<Product>> AddProduct(Product product)
     {
         
-        var newProductId =  await _productService.CreateProductAsync(product);
+        var newProduct =  await _productService.AddProductAsync(product);
         return Ok(new
         {
             message = $"Produto adicionado com sucesso",
-            product_id = newProductId
+            product_id = newProduct
+        });
+    }
+
+    // PUT existing product
+    [HttpPut("up/{product_id}")]
+    public async Task<ActionResult<Product>> UpdateProduct(Guid product_id, Product product)
+    {
+        var productUpdated = await _productService.UpdateProductAsync(product_id, product);
+        return Ok(new
+        {
+            message = "Produto alterado com sucesso",
+            product = productUpdated
+        });
+    }
+
+    // DELETE existing product
+    [HttpDelete ("del/{product_id}")]
+    public async Task<ActionResult<Product>> DeleteProduct(Guid product_id)
+    {
+        var DeleteProduct = await _productService.DeleteProductAsync(product_id);
+        return Ok(new
+        {
+            message = "Produto removido com sucesso",
+            product = DeleteProduct
         });
     }
 
