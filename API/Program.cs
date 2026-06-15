@@ -12,6 +12,7 @@ builder.Services.AddScoped<ProductService>();
 
 // Validators
 builder.Services.AddScoped<ProductValidator>();
+builder.Services.AddScoped<RegisterCustomerValidator>();
 //
 
 builder.Services.AddControllers();

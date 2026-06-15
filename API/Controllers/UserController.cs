@@ -15,11 +15,23 @@ public class UserController : ControllerBase
         _userService = userService;
     }
 
+    // GET all users
     [HttpGet]
     public async Task<ActionResult<List<User>>> GetAll()
     {
         var returnedUsers = await _userService.GetUsersAsync();
         return Ok(returnedUsers);
+    }
+
+    [HttpPost("register/customer")]
+    public async Task<ActionResult<User>> RegisterCustomer(User customer)
+    {
+        var registerCustomer = await _userService.RegisterCustomerAsync(customer);
+        return Ok(new
+        {
+           message = "Registro feito com sucesso",
+           customer = registerCustomer 
+        });
     }
 
 }

@@ -13,17 +13,17 @@ public class ProductValidator : AbstractValidator<Product>
         RuleFor(p => p.title)
             .NotNull()
             .NotEmpty()
-            .WithMessage(vc.NotNullMsg());
+            .WithMessage(vc.NotEmptyMsg());
 
         RuleFor(p => p.description)
             .NotNull()
             .NotEmpty()
-            .WithMessage(vc.NotNullMsg());
+            .WithMessage(vc.NotEmptyMsg());
 
         RuleFor(p => p.price)
             .NotNull()
             .NotEmpty()
-            .WithMessage(vc.NotNullMsg())
+            .WithMessage(vc.NotEmptyMsg())
             .GreaterThan(0)
             .WithMessage("O preço tem que ser maior que 0")
             .PrecisionScale(10, 2, false)
@@ -43,7 +43,7 @@ public class ProductValidator : AbstractValidator<Product>
         RuleFor(p => p.quantity)
             .NotNull()
             .NotEmpty()
-            .WithMessage(vc.NotNullMsg())
+            .WithMessage(vc.NotEmptyMsg())
             .GreaterThan(1)
             .WithMessage("Valor Invalido")        
             .LessThan(999999)
@@ -52,11 +52,11 @@ public class ProductValidator : AbstractValidator<Product>
         RuleFor(p => p.category_id)
             .NotNull()
             .NotEmpty()
-            .WithMessage(vc.NotNullMsg());
+            .WithMessage(vc.NotEmptyMsg());
 
         RuleFor(p => p.company_id)
             .NotNull()
             .NotEmpty()    
-            .WithMessage(vc.NotNullMsg());
+            .WithMessage(vc.NotEmptyMsg());
     }
 }

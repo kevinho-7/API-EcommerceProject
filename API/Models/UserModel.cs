@@ -14,5 +14,11 @@ public class User
     public string? city {get; set;}
     public string? state {get; set;}
     public DateTime? created_at {get; set;}
-    public string? user_role {get; set;}   
+    public Role user_role {get; set;}   
+}
+
+public enum Role
+{
+    Admin,
+    Customer
 }

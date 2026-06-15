@@ -1,6 +1,6 @@
 public class ValidationConstants
 {
-    public string NotNullMsg()
+    public string NotEmptyMsg()
     {
         return "Campo obrigatorio";
     }

@@ -34,7 +34,7 @@ public class GlobalExceptionMiddleware
                 success = false,
                 message = errorMessage,
                 property = errorProperty,
-                caused = errorCause
+                cause = errorCause
             });
         }
     }
