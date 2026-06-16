@@ -4,25 +4,27 @@ using BCrypt.Net;
 
 namespace API.Services;
 
-public class UserService
+public class CustomerService
 {
     private readonly ApiDbContext _context;
     private readonly RegisterCustomerValidator _regCustomerValidator;
 
-    public UserService(ApiDbContext context, RegisterCustomerValidator regCustomerValidator)
+    public CustomerService(ApiDbContext context, RegisterCustomerValidator regCustomerValidator)
     {
         _context = context;
         _regCustomerValidator = regCustomerValidator;
     }
 
-    // GET all users
-    public async Task<List<User>> GetUsersAsync()
+    // GET all Customers
+    public async Task<List<Customer>> GetCustomersAsync()
     {
-        return await _context.users.ToListAsync();
+        return await _context.customers
+            .Where(u => u.role == Role.Customer)
+            .ToListAsync();
     }
 
     // POST (register) "Customer"
-    public async Task<User> RegisterCustomerAsync(User customer)
+    public async Task<Customer> RegisterCustomerAsync(Customer customer)
     {
         var validation = _regCustomerValidator.Validate(customer);
         if (!validation.IsValid)
@@ -30,23 +32,20 @@ public class UserService
             throw new ValidationException(validation);
         }
 
+        var emailExists = await _context.customers.AnyAsync(u => u.email == customer.email);
+        if (emailExists)
+        {
+            throw new ConflictException("Email ja cadastrado");
+        }
+
         string passwordHash = BCrypt.Net.BCrypt.HashPassword(customer.password_hash);
 
         customer.password_hash = passwordHash;
-        customer.user_role = Role.Customer;
+        customer.role = Role.Customer;
 
-        await _context.users.AddAsync(customer);
+        await _context.customers.AddAsync(customer);
         await _context.SaveChangesAsync();
 
         return customer;
     }
 }
-
-
-//   "auth_provider": "corinthians,
-//   "cep": "",
-//   "street": "",
-//   "neighborhood": "",
-//   "complement": "",
-//   "city": "",
-//   "state": "sp",

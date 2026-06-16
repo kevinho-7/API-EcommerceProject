@@ -1,5 +1,4 @@
-
-public class User
+public class Customer
 {
     public Guid id {get; set;}
     public string? first_name {get; set;}
@@ -13,12 +12,6 @@ public class User
     public string? complement {get; set;}
     public string? city {get; set;}
     public string? state {get; set;}
-    public DateTime? created_at {get; set;}
-    public Role user_role {get; set;}   
-}
-
-public enum Role
-{
-    Admin,
-    Customer
+    public DateTime created_at {get; set;} = DateTime.UtcNow;
+    public Role? role {get; set;}
 }

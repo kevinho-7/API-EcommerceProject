@@ -1,6 +1,6 @@
 using FluentValidation;
 
-public class RegisterCustomerValidator : AbstractValidator<User>
+public class RegisterCustomerValidator : AbstractValidator<Customer>
 {
     public RegisterCustomerValidator()
     {
