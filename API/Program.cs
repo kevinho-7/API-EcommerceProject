@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddScoped<UserService>();
+builder.Services.AddScoped<CustomerService>();
 builder.Services.AddScoped<CompanyService>();
 builder.Services.AddScoped<CategoryService>();
 builder.Services.AddScoped<ProductService>();
@@ -12,6 +12,7 @@ builder.Services.AddScoped<ProductService>();
 
 // Validators
 builder.Services.AddScoped<ProductValidator>();
+builder.Services.AddScoped<RegisterCustomerValidator>();
 //
 
 builder.Services.AddControllers();

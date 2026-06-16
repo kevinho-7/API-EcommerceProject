@@ -79,7 +79,7 @@ public class ProductService
             throw new ValidationException(validation);
         }
 
-        //product.id = Guid.NewGuid();
+        product.id = Guid.NewGuid();
         await _context.products.AddAsync(product);
         await _context.SaveChangesAsync();
         

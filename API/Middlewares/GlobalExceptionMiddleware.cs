@@ -23,6 +23,16 @@ public class GlobalExceptionMiddleware
                 message = ex.Message
             });
         }
+        catch(ConflictException ex)
+        {
+            context.Response.StatusCode = 409;
+
+            await context.Response.WriteAsJsonAsync(new
+            {
+               success = false,
+               message = ex.Message 
+            });
+        }
         catch(ValidationException ex)
         {
             var errorMessage = ex.ValidationResult.Errors.Select(x => x.ErrorMessage);
@@ -34,7 +44,7 @@ public class GlobalExceptionMiddleware
                 success = false,
                 message = errorMessage,
                 property = errorProperty,
-                caused = errorCause
+                cause = errorCause
             });
         }
     }
