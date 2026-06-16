@@ -24,14 +24,25 @@ public class CustomerController : ControllerBase
     }
 
     // POST (register) "Customer"
-    [HttpPost("post")]
-    public async Task<ActionResult<Customer>> RegisterCustomer(Customer customer)
+    [HttpPost("post/register")]
+    public async Task<ActionResult<Customer>> RegisterCustomer(Customer register)
     {
-        var registerCustomer = await _customerService.RegisterCustomerAsync(customer);
+        var registerCustomer = await _customerService.RegisterCustomerAsync(register);
         return Ok(new
         {
            message = "Registro feito com sucesso",
            customer = registerCustomer 
+        });
+    }
+
+    //POST (login) "Customer"
+    [HttpPost("auth/login")]
+    public async Task<ActionResult<Customer>> LoginCustomer(Customer login)
+    {
+        var loginCustomer = await _customerService.LoginCustomerAsync(login);
+        return Ok(new
+        {
+            message = "deu certo mano",
         });
     }
 

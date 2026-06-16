@@ -13,6 +13,7 @@ public class GlobalExceptionMiddleware
         {
             await _next(context);
         }
+        // Exception Not found 404 error
         catch (NotFoundException ex)
         {
             context.Response.StatusCode = 404;
@@ -23,6 +24,7 @@ public class GlobalExceptionMiddleware
                 message = ex.Message
             });
         }
+        // Exception Conflicts 409 error
         catch(ConflictException ex)
         {
             context.Response.StatusCode = 409;
@@ -33,6 +35,7 @@ public class GlobalExceptionMiddleware
                message = ex.Message 
             });
         }
+        // Exception Model Validation error
         catch(ValidationException ex)
         {
             var errorMessage = ex.ValidationResult.Errors.Select(x => x.ErrorMessage);
