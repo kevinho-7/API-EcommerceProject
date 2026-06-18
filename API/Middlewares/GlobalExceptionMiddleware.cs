@@ -50,5 +50,16 @@ public class GlobalExceptionMiddleware
                 cause = errorCause
             });
         }
+        catch(Exception ex)
+        {
+            context.Response.StatusCode = 500;
+            
+            await context.Response.WriteAsJsonAsync(new
+            {
+               success = false,
+               message = $"Internal server error. {ex.Message}",
+               error = ex.StackTrace
+            });
+        }
     }
 }

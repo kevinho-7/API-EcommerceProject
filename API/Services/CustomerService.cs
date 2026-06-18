@@ -9,13 +9,15 @@ public class CustomerService
 {
     private readonly ApiDbContext _context;
     private readonly RegisterCustomerValidator _regCustomerValidator;
-    private readonly LoginCustomerValidation _loginCustomerValidator;
+    private readonly ReqLoginValidation _reqloginValidator;
+    private readonly JwtService _jwtService;
 
-    public CustomerService(ApiDbContext context, RegisterCustomerValidator regCustomerValidator, LoginCustomerValidation loginCustomerValidator)
+    public CustomerService(ApiDbContext context, RegisterCustomerValidator regCustomerValidator, ReqLoginValidation reqloginValidator, JwtService jwtService)
     {
         _context = context;
         _regCustomerValidator = regCustomerValidator;
-        _loginCustomerValidator = loginCustomerValidator;
+        _reqloginValidator = reqloginValidator;
+        _jwtService = jwtService;
 
     }
 
@@ -23,10 +25,16 @@ public class CustomerService
     public async Task<List<Customer>> GetCustomersAsync()
     {
         return await _context.customers
-            .Where(u => u.role == Role.Customer)
             .ToListAsync();
     }
 
+    // GET Customer by Id
+    public async Task<Customer?> GetCustomerAsync(string customer_id)
+    {
+        return await _context.customers
+            .FirstOrDefaultAsync(c => c.id == Guid.Parse(customer_id));
+    }
+    
     // POST (register) "Customer"
     public async Task<Customer> RegisterCustomerAsync(Customer register)
     {
@@ -39,7 +47,7 @@ public class CustomerService
         var emailExists = await _context.customers.AnyAsync(c => c.email == register.email);
         if (emailExists)
         {
-            throw new ConflictException("Email ou Senha invalido");
+            throw new ConflictException("Invalid Email or Password");
         }
 
         string passwordHash = BCrypt.Net.BCrypt.HashPassword(register.password_hash);
@@ -54,30 +62,62 @@ public class CustomerService
     }
 
     // POST (login) "Customer"
-    public async Task<Customer> LoginCustomerAsync(Customer login)
+    public async Task<string> LoginAsync(JwtClaimsData req)
     {
-        var validation = _loginCustomerValidator.Validate(login);
-        var emailExists = await _context.customers.AnyAsync(c => c.email == login.email);
-        var customerPassword = await _context.customers
-            .Where(c => c.email == login.email)
-            .Select(c => c.password_hash)
-            .FirstOrDefaultAsync();
-
-        bool IsValidPassword = BCrypt.Net.BCrypt.Verify(
-            login.password_hash,
-            customerPassword
-        );
-
+        var validation = _reqloginValidator.Validate(req);
         if (!validation.IsValid)
         {
             throw new ValidationException(validation);
         }
 
-        if (!emailExists || !IsValidPassword)
+        var emailExists = await _context.customers
+            .AnyAsync(l => l.email == req.email);
+
+        var customerPassword = await _context.customers
+            .Where(l => l.email == req.email)
+            .Select(l => l.password_hash)
+            .FirstOrDefaultAsync();
+
+
+        if (!emailExists || customerPassword == null)
         {
-            throw new ConflictException("Email ou senha invalidos");
+            throw new ConflictException("Invalid Email or Password");
         }
 
-        return login;
+        bool IsValidPassword = BCrypt.Net.BCrypt.Verify(
+            req.password,
+            customerPassword
+        );
+
+        if (!IsValidPassword)
+        {
+            throw new ConflictException("Incorrect Password");
+        }
+
+        var customerId = await _context.customers
+            .Where(c => c.email == req.email)
+            .Select(c => c.id)
+            .FirstOrDefaultAsync();
+
+        var customerEmail = await _context.customers
+            .Where(c => c.email == req.email)
+            .Select(c => c.email)
+            .FirstOrDefaultAsync();
+
+        var customerRole = await _context.customers
+            .Where(c => c.email == req.email)
+            .Select(c => c.role)
+            .FirstOrDefaultAsync();
+
+        var jwtClaimsData = new JwtClaimsData
+        {
+            id = customerId,
+            email = customerEmail,
+            role = customerRole
+        };
+
+        string token = _jwtService.GenerateCustomerToken(jwtClaimsData);
+
+        return token;
     }
 }

@@ -1,5 +1,7 @@
+using System.Security.Claims;
 using API.Models;
 using API.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
@@ -15,12 +17,28 @@ public class CustomerController : ControllerBase
         _customerService = customerService;
     }
 
-    // GET all users
+    // GET all customer
+    [Authorize(Roles = "Admin")]
     [HttpGet("get")]
     public async Task<ActionResult<List<Customer>>> GetAll()
     {
         var returnedUsers = await _customerService.GetCustomersAsync();
         return Ok(returnedUsers);
+    }
+
+    // GET customer by Id
+    [Authorize]
+    [HttpGet("profile")]
+    public async Task<ActionResult<Customer>> GetCustomerById()
+    {
+        var customerId = User.FindFirst("id")?.Value;
+        var res = await _customerService.GetCustomerAsync(customerId!);
+
+        return Ok(new
+        {
+            success = true,
+            customer = res
+        });
     }
 
     // POST (register) "Customer"
@@ -35,15 +53,34 @@ public class CustomerController : ControllerBase
         });
     }
 
-    //POST (login) "Customer"
+    // POST (login) "Customer"
     [HttpPost("auth/login")]
-    public async Task<ActionResult<Customer>> LoginCustomer(Customer login)
+    public async Task<ActionResult<JwtClaimsData>> LoginCustomer(JwtClaimsData req)
     {
-        var loginCustomer = await _customerService.LoginCustomerAsync(login);
-        return Ok(new
-        {
-            message = "deu certo mano",
-        });
+        var token = await _customerService.LoginAsync(req);
+
+        Response.Cookies.Append(
+            "jwt",
+            token,
+            new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = false,
+                SameSite = SameSiteMode.Strict,
+                Expires = DateTime.UtcNow.AddHours(1)
+            }
+        );
+
+        return Ok();
+    }
+
+    // POST (logout) Customer
+    [HttpPost("auth/logout")]
+    public async Task<ActionResult> LogoutCustomer()
+    {
+        Response.Cookies.Delete("jwt");
+
+        return Ok();
     }
 
 }

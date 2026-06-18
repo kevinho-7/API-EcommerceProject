@@ -1,8 +1,8 @@
 using FluentValidation;
 
-public class LoginCustomerValidation : AbstractValidator<Customer>
+public class ReqLoginValidation : AbstractValidator<JwtClaimsData>
 {
-    public LoginCustomerValidation()
+    public ReqLoginValidation()
     {
         string invalidMsg = "Email ou Senha invalido";
 
@@ -12,7 +12,7 @@ public class LoginCustomerValidation : AbstractValidator<Customer>
             .EmailAddress()
             .WithMessage(invalidMsg);
 
-        RuleFor(c => c.password_hash)
+        RuleFor(c => c.password)
             .NotEmpty()
             .WithMessage(invalidMsg);
     }
