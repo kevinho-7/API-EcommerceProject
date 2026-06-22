@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 
@@ -6,12 +7,28 @@ using Microsoft.AspNetCore.Mvc;
 public class AdminController : ControllerBase
 {
     private readonly AdminService _admService;
+    private readonly ICurrentUserService _currentUserService; 
 
-    public AdminController(AdminService adminService)
+    public AdminController(AdminService adminService, ICurrentUserService currentUserService)
     {
         _admService = adminService;
+        _currentUserService = currentUserService;
     }
 
+    // Get Admin profile by Id
+    [Authorize]
+    [HttpGet("profile")]
+    public async Task<ActionResult<Admin>> GetById()
+    {
+        var id = _currentUserService.GetUserId();
+        var admin = _admService.GetProfileAsync(id!);
+
+        return Ok(new
+        {
+            success = true,
+            profile = admin
+        });
+    }
 
     // POST (register) Admin
     [HttpPost("register")]
@@ -54,6 +71,21 @@ public class AdminController : ControllerBase
         Response.Cookies.Delete("jwt");
 
         return Ok();
+    }
+
+    // PUT (Update) profile Admin
+    [Authorize]
+    [HttpPut("update/profile")]
+    public async Task<ActionResult<Admin>> UpdateProfile(AdminUpdateProfileDto dto)
+    {
+        var id = _currentUserService.GetUserId();
+        var admin = _admService.UpdateProfileAsync(id!, dto);
+
+        return Ok(new
+        {
+            success = true,
+            updated = admin
+        });
     }
 
 }

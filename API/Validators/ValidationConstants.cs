@@ -2,12 +2,12 @@ public class ValidationConstants
 {
     public string NotEmptyMsg()
     {
-        return "Campo obrigatorio";
+        return "Required Field";
     }
 
     public string InvalidFormatMsg()
     {
-        return "Formato Invalido";
+        return "Invalid Format";
     }
 
     public string OnlyLettersPattern()

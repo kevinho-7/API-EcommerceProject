@@ -7,13 +7,38 @@ public class AdminService
     private readonly RegisterValidator _registerValidator;
     private readonly LoginValidation _loginValidator;
     private readonly JwtService _jwtService;
+    private readonly AdminProfileValidator _admProfValidator;
 
-    public AdminService(ApiDbContext context, RegisterValidator registerValidator, LoginValidation loginValidator, JwtService jwtService)
+    public AdminService(ApiDbContext context, RegisterValidator registerValidator, LoginValidation loginValidator, JwtService jwtService, AdminProfileValidator admProfValidator)
     {
         _context = context;
         _registerValidator = registerValidator;
         _loginValidator = loginValidator;
         _jwtService = jwtService;
+        _admProfValidator =  admProfValidator;
+    }
+
+    // GET Admin profile by Id
+    public async Task<AdminProfileDto> GetProfileAsync(string adminId)
+    {
+        var admin = await _context.admins
+            .Include(a => a.Company)
+            .FirstOrDefaultAsync(a => a.id == Guid.Parse(adminId));
+            
+        AdminProfileDto profile = new AdminProfileDto
+        {
+            first_name = admin!.first_name, 
+            last_name = admin!.last_name,
+            email = admin!.email,
+            street = admin!.street,
+            neighborhood = admin!.neighborhood,
+            complement = admin!.complement,
+            city = admin!.city,
+            state = admin!.state,
+            Company = admin.Company
+        };
+
+        return profile;
     }
 
     // POST (register) Admin
@@ -46,7 +71,6 @@ public class AdminService
 
         return newAdmin;
     }
-
 
     // POST (login) Admin
     public async Task<string> LoginAsync(LoginDto dto)
@@ -106,6 +130,33 @@ public class AdminService
 
         return token;
 
+    }
+
+    // PUT (Update) Admin profile
+    public async Task<Admin> UpdateProfileAsync(string adminId, AdminUpdateProfileDto dto)
+    {
+        var validation = _admProfValidator.Validate(dto);
+        if (!validation.IsValid)
+        {
+            throw new ValidationException(validation);
+        }
+
+        // var admin = await _context.admins
+        //     .FindAsync(Guid.Parse(adminId));
+
+        var admin = await _context.admins
+            .FirstOrDefaultAsync(a => a.id == Guid.Parse(adminId));
+
+
+        admin!.street = dto.street;
+        admin!.neighborhood = dto.neighborhood;
+        admin!.complement = dto.complement;
+        admin!.city = dto.city;
+        admin!.state = dto.state;
+
+        await _context.SaveChangesAsync();
+
+        return admin;
     }
 
 }

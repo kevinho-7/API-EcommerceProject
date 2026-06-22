@@ -22,13 +22,6 @@ public class CustomerService
 
     }
 
-    // GET all Customers
-    public async Task<List<Customer>> GetAsync()
-    {
-        return await _context.customers
-            .ToListAsync();
-    }
-
     // GET Customer by Id
     public async Task<Customer?> GetByIdAsync(string customer_id)
     {

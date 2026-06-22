@@ -5,7 +5,6 @@ public class Admin
     public string? last_name {get; set;}
     public string? email {get; set;}
     public string? password {get; set;}
-    public string? cep {get; set;}
     public string? street {get; set;}
     public string? neighborhood {get; set;}
     public string? complement {get; set;}
@@ -13,4 +12,7 @@ public class Admin
     public string? state {get; set;}
     public DateTime created_at {get; set;} = DateTime.UtcNow;
     public string? role {get; set;} = "Admin";
+    public Guid company_id{get; set;}
+    public Company? Company {get; set;}
+    
 }

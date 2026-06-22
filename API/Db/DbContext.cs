@@ -34,6 +34,12 @@ public class ApiDbContext : DbContext
             .HasOne(c => c.Company)
             .WithMany()
             .HasForeignKey(c => c.company_id);
+
+        // ForeignKey for Admin Model
+        modelBuilder.Entity<Admin>()
+            .HasOne(a => a.Company)
+            .WithMany()
+            .HasForeignKey(a => a.company_id);
     }
     
 }

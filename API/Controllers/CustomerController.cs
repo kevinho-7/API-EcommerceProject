@@ -11,21 +11,12 @@ namespace API.Controllers;
 public class CustomerController : ControllerBase
 {
     private readonly CustomerService _customerService;
-    private readonly ICurrentUserService _currentUser; 
+    private readonly ICurrentUserService _currentUserService; 
 
-    public CustomerController(CustomerService customerService, ICurrentUserService currentUser)
+    public CustomerController(CustomerService customerService, ICurrentUserService currentUserService)
     {
         _customerService = customerService;
-        _currentUser = currentUser;
-    }
-
-    // GET all customer
-    [Authorize(Roles = "Admin")]
-    [HttpGet("get")]
-    public async Task<ActionResult<List<Customer>>> GetAll()
-    {
-        var returnedUsers = await _customerService.GetAsync();
-        return Ok(returnedUsers);
+        _currentUserService = currentUserService;
     }
 
     // GET customer by Id
@@ -33,7 +24,7 @@ public class CustomerController : ControllerBase
     [HttpGet("profile")]
     public async Task<ActionResult<Customer>> GetCustomerById()
     {
-        var customerId = _currentUser.GetUserId();
+        var customerId = _currentUserService.GetUserId();
         var res = await _customerService.GetByIdAsync(customerId!);
 
         return Ok(new
