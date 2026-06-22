@@ -12,21 +12,21 @@ public class JwtService
         _config = config;
     }
 
-    public string GenerateCustomerToken(JwtClaimsData customer)
+    public string GenToken(JwtClaimsData data)
     {
         var claims = new[]
         {
             new Claim(
                 "id",
-                customer.id.ToString()
+                data.id.ToString()
             ),
             new Claim(
                 "email",
-                customer.email!
+                data.email!
             ),
             new Claim(
                 "role",
-                customer.role.ToString()!
+                data.role!
             )
         };
 

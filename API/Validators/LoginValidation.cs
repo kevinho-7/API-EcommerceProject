@@ -1,8 +1,8 @@
 using FluentValidation;
 
-public class ReqLoginValidation : AbstractValidator<JwtClaimsData>
+public class LoginValidation : AbstractValidator<LoginDto>
 {
-    public ReqLoginValidation()
+    public LoginValidation()
     {
         string invalidMsg = "Email ou Senha invalido";
 

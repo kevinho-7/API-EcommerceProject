@@ -11,10 +11,12 @@ namespace API.Controllers;
 public class CustomerController : ControllerBase
 {
     private readonly CustomerService _customerService;
+    private readonly ICurrentUserService _currentUser; 
 
-    public CustomerController(CustomerService customerService)
+    public CustomerController(CustomerService customerService, ICurrentUserService currentUser)
     {
         _customerService = customerService;
+        _currentUser = currentUser;
     }
 
     // GET all customer
@@ -22,7 +24,7 @@ public class CustomerController : ControllerBase
     [HttpGet("get")]
     public async Task<ActionResult<List<Customer>>> GetAll()
     {
-        var returnedUsers = await _customerService.GetCustomersAsync();
+        var returnedUsers = await _customerService.GetAsync();
         return Ok(returnedUsers);
     }
 
@@ -31,8 +33,8 @@ public class CustomerController : ControllerBase
     [HttpGet("profile")]
     public async Task<ActionResult<Customer>> GetCustomerById()
     {
-        var customerId = User.FindFirst("id")?.Value;
-        var res = await _customerService.GetCustomerAsync(customerId!);
+        var customerId = _currentUser.GetUserId();
+        var res = await _customerService.GetByIdAsync(customerId!);
 
         return Ok(new
         {
@@ -42,22 +44,22 @@ public class CustomerController : ControllerBase
     }
 
     // POST (register) "Customer"
-    [HttpPost("post/register")]
-    public async Task<ActionResult<Customer>> RegisterCustomer(Customer register)
+    [HttpPost("register")]
+    public async Task<ActionResult<Customer>> RegisterCustomer(RegisterDto dto)
     {
-        var registerCustomer = await _customerService.RegisterCustomerAsync(register);
+        var newCustomer = await _customerService.RegisterAsync(dto);
         return Ok(new
         {
-           message = "Registro feito com sucesso",
-           customer = registerCustomer 
+           success = true,
+           customer = newCustomer 
         });
     }
 
     // POST (login) "Customer"
     [HttpPost("auth/login")]
-    public async Task<ActionResult<JwtClaimsData>> LoginCustomer(JwtClaimsData req)
+    public async Task<ActionResult<LoginDto>> LoginCustomer(LoginDto dto)
     {
-        var token = await _customerService.LoginAsync(req);
+        var token = await _customerService.LoginAsync(dto);
 
         Response.Cookies.Append(
             "jwt",

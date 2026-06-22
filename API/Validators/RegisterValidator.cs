@@ -1,8 +1,8 @@
 using FluentValidation;
 
-public class RegisterCustomerValidator : AbstractValidator<Customer>
+public class RegisterValidator : AbstractValidator<RegisterDto>
 {
-    public RegisterCustomerValidator()
+    public RegisterValidator()
     {
         ValidationConstants vc = new ValidationConstants();
 
@@ -44,7 +44,7 @@ public class RegisterCustomerValidator : AbstractValidator<Customer>
             .WithMessage(vc.NotEmptyMsg())
             .EmailAddress();
 
-        RuleFor(u => u.password_hash)
+        RuleFor(u => u.password)
             .NotNull()
             .NotEmpty()
             .WithMessage(vc.NotEmptyMsg())
