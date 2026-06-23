@@ -42,6 +42,8 @@ public class GlobalExceptionMiddleware
             var errorProperty = ex.ValidationResult.Errors.Select(x => x.PropertyName);
             var errorCause = ex.ValidationResult.Errors.Select(x => x.AttemptedValue);
 
+            context.Response.StatusCode = 400;
+
             await context.Response.WriteAsJsonAsync(new
             {
                 success = false,

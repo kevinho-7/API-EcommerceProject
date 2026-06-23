@@ -1,3 +1,4 @@
+using API.DTOS;
 using FluentValidation;
 
 public class RegisterValidator : AbstractValidator<RegisterDto>

@@ -25,7 +25,7 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<ProductValidator>();
 builder.Services.AddScoped<RegisterValidator>();
 builder.Services.AddScoped<LoginValidation>();
-builder.Services.AddScoped<AdminProfileValidator>();
+builder.Services.AddScoped<UpdateProfileAddressValidator>();
 //
 
 // Data Base connection

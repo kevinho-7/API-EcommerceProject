@@ -1,3 +1,6 @@
+using API.DTOS;
+using API.Models;
+using API.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -43,6 +46,11 @@ public class AdminController : ControllerBase
         });
     }
 
+    // POST Address in Admin Profile
+    //[Authorize]
+    // [HttpPost("profile/address")]
+    // public async
+
     // POST (login) Admin
     [HttpPost("auth/login")]
     public async Task<ActionResult<LoginDto>> LoginAdmin(LoginDto dto)
@@ -75,16 +83,16 @@ public class AdminController : ControllerBase
 
     // PUT (Update) profile Admin
     [Authorize]
-    [HttpPut("update/profile")]
-    public async Task<ActionResult<Admin>> UpdateProfile(AdminUpdateProfileDto dto)
+    [HttpPut("update/profile/address")]
+    public async Task<ActionResult<Admin>> UpdateProfile(UpdateProfileAddressDto updates)
     {
         var id = _currentUserService.GetUserId();
-        var admin = _admService.UpdateProfileAsync(id!, dto);
+        var update = await _admService.UpdateProfileAsync(updates, id!);
 
         return Ok(new
         {
             success = true,
-            updated = admin
+            updates = update
         });
     }
 

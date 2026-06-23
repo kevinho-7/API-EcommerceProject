@@ -1,4 +1,6 @@
-public class AdminUpdateProfileDto
+namespace API.DTOS;
+
+public class AddressDto
 {
     public string? street {get; set;}
     public string? neighborhood {get; set;}

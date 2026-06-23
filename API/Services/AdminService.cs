@@ -1,21 +1,25 @@
+using API.DTOS;
+using API.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+
+namespace API.Services;
 
 public class AdminService
 {
     private readonly ApiDbContext _context;
     private readonly RegisterValidator _registerValidator;
     private readonly LoginValidation _loginValidator;
+    private readonly UpdateProfileAddressValidator _updateAdressValidator;
     private readonly JwtService _jwtService;
-    private readonly AdminProfileValidator _admProfValidator;
 
-    public AdminService(ApiDbContext context, RegisterValidator registerValidator, LoginValidation loginValidator, JwtService jwtService, AdminProfileValidator admProfValidator)
+    public AdminService(ApiDbContext context, RegisterValidator registerValidator, LoginValidation loginValidator, JwtService jwtService, UpdateProfileAddressValidator updateAdressValidator)
     {
         _context = context;
         _registerValidator = registerValidator;
         _loginValidator = loginValidator;
         _jwtService = jwtService;
-        _admProfValidator =  admProfValidator;
+        _updateAdressValidator = updateAdressValidator;
     }
 
     // GET Admin profile by Id
@@ -45,7 +49,7 @@ public class AdminService
     public async Task<Admin> RegisterAsync(RegisterDto dto)
     {
         var validation = _registerValidator.Validate(dto);
-        if (!validation.IsValid)
+        if(!validation.IsValid)
         {
             throw new ValidationException(validation);
         }
@@ -133,30 +137,27 @@ public class AdminService
     }
 
     // PUT (Update) Admin profile
-    public async Task<Admin> UpdateProfileAsync(string adminId, AdminUpdateProfileDto dto)
+    public async Task<Admin> UpdateProfileAsync(UpdateProfileAddressDto updateData, string adminId)
     {
-        var validation = _admProfValidator.Validate(dto);
-        if (!validation.IsValid)
+        var validation = _updateAdressValidator.Validate(updateData);
+        if(!validation.IsValid)
         {
             throw new ValidationException(validation);
         }
 
-        // var admin = await _context.admins
-        //     .FindAsync(Guid.Parse(adminId));
-
-        var admin = await _context.admins
+        var update = await _context.admins
             .FirstOrDefaultAsync(a => a.id == Guid.Parse(adminId));
 
 
-        admin!.street = dto.street;
-        admin!.neighborhood = dto.neighborhood;
-        admin!.complement = dto.complement;
-        admin!.city = dto.city;
-        admin!.state = dto.state;
+        update!.street = updateData.street;
+        update!.neighborhood = updateData.neighborhood;
+        update!.complement = updateData.complement;
+        update!.city = updateData.city;
+        update!.state = updateData.state;
 
         await _context.SaveChangesAsync();
 
-        return admin;
+        return update;
     }
 
 }

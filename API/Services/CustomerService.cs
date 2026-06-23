@@ -1,4 +1,5 @@
 using API.Models;
+using API.DTOS;
 using Microsoft.EntityFrameworkCore;
 using BCrypt.Net;
 using System.Net.Http.Headers;
@@ -23,10 +24,10 @@ public class CustomerService
     }
 
     // GET Customer by Id
-    public async Task<Customer?> GetByIdAsync(string customer_id)
+    public async Task<Customer?> GetByIdAsync(string customerId)
     {
         return await _context.customers
-            .FirstOrDefaultAsync(c => c.id == Guid.Parse(customer_id));
+            .FirstOrDefaultAsync(c => c.id == Guid.Parse(customerId));
     }
     
     // POST (register) "Customer"

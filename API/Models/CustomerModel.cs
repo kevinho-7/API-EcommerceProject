@@ -1,3 +1,5 @@
+namespace API.Models;
+
 public class Customer
 {
     public Guid id {get; set;}

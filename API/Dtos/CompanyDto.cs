@@ -1,3 +1,5 @@
+namespace API.DTOS;
+
 public class CompanyDto
 {
     public string? name {get; set;}

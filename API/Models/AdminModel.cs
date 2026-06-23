@@ -1,3 +1,5 @@
+namespace API.Models;
+
 public class Admin
 {
     public Guid id {get; set;}

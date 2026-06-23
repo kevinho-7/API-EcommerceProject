@@ -1,3 +1,5 @@
+namespace API.DTOS;
+
 public class LoginDto
 {
     public string? email {get; set;}

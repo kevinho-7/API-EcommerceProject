@@ -1,3 +1,5 @@
+namespace API.Models;
+
 public class JwtClaimsData
 {
     public Guid id {get; set;}

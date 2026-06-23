@@ -1,3 +1,5 @@
+namespace API.Models;
+
 public class Company
 {
     public Guid id {get; set;}

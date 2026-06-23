@@ -1,3 +1,5 @@
+namespace API.DTOS;
+
 public class RegisterDto
 {
     public string? first_name {get; set;}

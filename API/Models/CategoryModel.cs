@@ -1,3 +1,5 @@
+namespace API.Models;
+
 public class Category
 {
     public Guid id {get; set;}
