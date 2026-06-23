@@ -1,13 +1,10 @@
-namespace API.Models;
+namespace API.DTOS;
 
-public class Company
+public class CompanyDto
 {
-    public Guid id {get; set;}
-    public Guid admin_id {get; set;}
     public string? name {get; set;}
     public string? email {get; set;}
     public string? phone {get; set;}
-    public string? cep {get; set;}
     public string? street {get; set;}
     public string? address_number {get; set;}
     public string? neighborhood {get; set;}

@@ -1,3 +1,4 @@
+using API.Models;
 using Microsoft.EntityFrameworkCore;
 
 public class CategoryService

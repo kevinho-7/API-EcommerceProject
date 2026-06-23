@@ -8,6 +8,7 @@ public class ApiDbContext : DbContext
     {    
     }
 
+    public DbSet<Admin> admins {get; set;}
     public DbSet<Customer> customers {get; set;}
     public DbSet<Company> companies {get; set;}
     public DbSet<Product> products {get; set;}
@@ -34,10 +35,11 @@ public class ApiDbContext : DbContext
             .WithMany()
             .HasForeignKey(c => c.company_id);
 
-        // Converting user_role column to type String
-        modelBuilder.Entity<Customer>()
-            .Property(c => c.role)
-            .HasConversion<string>();
+        // ForeignKey for Admin Model
+        modelBuilder.Entity<Admin>()
+            .HasOne(a => a.Company)
+            .WithMany()
+            .HasForeignKey(a => a.company_id);
     }
     
 }
