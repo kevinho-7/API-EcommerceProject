@@ -29,7 +29,7 @@ builder.Services.AddScoped<UpdateProfileAddressValidator>();
 //
 
 // Data Base connection
-var connectionString = builder.Configuration.GetConnectionString("DbConnection");
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
 builder.Services.AddDbContext<ApiDbContext>(options =>
 {
